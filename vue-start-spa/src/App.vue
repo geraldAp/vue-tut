@@ -1,26 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Navbar :pages="pages" :active-page="activePage" :nav-link-click="(index) => activePage = index" />
+
+    <page-viewer
+    v-if="pages.length > 0"
+    :page="pages[activePage]">
+    </page-viewer>
 </template>
 
+
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PageViewer from './components/PageViewer.vue';
+import Navbar from './components/Navbar.vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    // object containing the components we use inside vue 
+    components: {
+        Navbar,
+        PageViewer
+    },
+
+    data() {
+        return {
+            activePage: 0,
+            pages: [],
+        };
+    },
+    created() {
+        this.getPage()
+    },
+    methods: {
+        async getPage() {
+            let res = await fetch('pages.json')
+            let data = await res.json()
+            console.log(data)
+            
+            this.pages = data
+        }
+    }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
