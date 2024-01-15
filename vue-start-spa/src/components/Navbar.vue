@@ -6,7 +6,7 @@
                 <!-- <li class="nav-item">
             <a href="#" aria-current="page" class="nav-link">{{links[0]}}</a>
           </li>  v-for for thr for in loop -->
-                <li v-for="(page, index) in pages" class="nav-item" :key="index">
+                <li v-for="(page, index) in publishedPages" class="nav-item" :key="index">
                     <!-- v-bind to tell this we will be bind a value to this attribute is a js expression  but we can just use : then followed by the attribute -->
                     <!-- .prevent to stop it from going to the link in the href  -->
                     <navbar-link :page="page" :isActive="activePage == index" @click.prevent="navLinkClick(index)" />
@@ -35,7 +35,11 @@ export default {
             theme: "light",
         };
     },
-
+    computed: {
+        publishedPages() {
+            return this.pages.filter(p => p.published)
+        }
+    },
     // for functions
     methods: {
         changeTheme() {
@@ -47,7 +51,17 @@ export default {
             }
 
             this.theme = theme;
+            this.storeThemeSetting()
         },
+        storeThemeSetting() {
+            localStorage.setItem('theme', this.theme)
+        },
+        getThemeSetting() {
+            let theme = localStorage.getItem('theme')
+            if (theme) {
+                this.theme = theme
+            }
+        }
     },
 
 
